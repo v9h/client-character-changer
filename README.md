@@ -1,9 +1,14 @@
-# Client-sided character changer 
+# Client-Sided Character Changer
 
-Utility script that will copy a users avatar directly by UserID, incredibly easy to understand and work with.
+A utility script that allows you to copy a user's avatar directly using their UserID. Simple, efficient, and easy to integrate.
 
-# TODO
+## Features
+- Instantly clones a user's avatar by UserID.
+- Lightweight and easy to modify.
 
-- Add ability to copy newer accessories ( WaistAccessory, HairAccessory, Etc. ).
-- Add ability to copy bodyparts.
-- Add ability to copy clothing.
+## TODO
+- ⏳ Add support for copying newer accessories (WaistAccessory, HairAccessory, etc.).
+- ⏳ Implement copying of body parts.
+- ⏳ Enable clothing duplication.
+
+Stay tuned for updates!
