@@ -1,33 +1,26 @@
-local HttpService = game:GetService("HttpService")
-
-local function getCurrentlyWearing(userId)
-    local url = "https://avatar.roblox.com/v1/users/" .. userId .. "/currently-wearing"
+local function requestData(url)
     local success, response = pcall(function()
-        return HttpService:GetAsync(url)
+        return request({ Url = url, Method = "GET" }).Body
     end)
     
     if success then
-        local data = HttpService:JSONDecode(response)
-        return data.assetIds
+        return game:GetService("HttpService"):JSONDecode(response)
     else
         warn("Failed to fetch data: " .. tostring(response))
         return nil
     end
 end
 
+local function getCurrentlyWearing(userId)
+    local url = "https://avatar.roblox.com/v1/users/" .. userId .. "/currently-wearing"
+    local data = requestData(url)
+    return data and data.assetIds or nil
+end
+
 local function getAssetType(assetId)
     local url = "https://economy.roblox.com/v2/assets/" .. assetId .. "/details"
-    local success, response = pcall(function()
-        return HttpService:GetAsync(url)
-    end)
-    
-    if success then
-        local data = HttpService:JSONDecode(response)
-        return data.AssetTypeId
-    else
-        warn("Failed to fetch asset details: " .. tostring(response))
-        return nil
-    end
+    local data = requestData(url)
+    return data and data.AssetTypeId or nil
 end
 
 function createWeld(partA, partB)
