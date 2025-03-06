@@ -18,9 +18,16 @@ local function getCurrentlyWearing(userId)
 end
 
 local function getAssetType(assetId)
-    local url = "https://economy.roblox.com/v2/assets/" .. assetId .. "/details"
+    -- Use the new Cloudflare Worker proxy
+    local url = "https://economyproxyapi.tr6ffic-5a7.workers.dev/?assetId=" .. assetId
     local data = requestData(url)
-    return data and data.AssetTypeId or nil
+
+    if data and data.type then
+        return data.type
+    else
+        warn("Failed to get asset type for:", assetId)
+        return nil
+    end
 end
 
 function createWeld(partA, partB)
@@ -78,10 +85,9 @@ function attachHatToCharacter(character, hat)
     end
 end
 
-local userId = 1 -- Replace with the actual user ID
+local userId = 1
 local assetIds = getCurrentlyWearing(userId)
 local assetTypes = {}
-local hatAssetTypes = {8, 41, 42, 43, 44, 45, 46, 47} -- Considered as hats
 
 if assetIds then
     print("Asset Types:")
@@ -90,8 +96,7 @@ if assetIds then
         if assetType then
             assetTypes[assetId] = assetType
             print("Asset ID:", assetId, "Type:", assetType)
-            
-            if table.find(hatAssetTypes, assetType) then -- Check if assetType is a hat
+            if assetType == 8 or (assetType >= 41 and assetType <= 47) then
                 local hatId = assetId
                 local hat = game:GetObjects("rbxassetid://" .. tostring(hatId))[1]
                 attachHatToCharacter(game.Players.LocalPlayer.Character, hat)
