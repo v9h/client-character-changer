@@ -81,6 +81,7 @@ end
 local userId = 1 -- Replace with the actual user ID
 local assetIds = getCurrentlyWearing(userId)
 local assetTypes = {}
+local hatAssetTypes = {8, 41, 42, 43, 44, 45, 46, 47} -- Considered as hats
 
 if assetIds then
     print("Asset Types:")
@@ -90,7 +91,7 @@ if assetIds then
             assetTypes[assetId] = assetType
             print("Asset ID:", assetId, "Type:", assetType)
             
-            if assetType == 8 then -- Hat asset type
+            if table.find(hatAssetTypes, assetType) then -- Check if assetType is a hat
                 local hatId = assetId
                 local hat = game:GetObjects("rbxassetid://" .. tostring(hatId))[1]
                 attachHatToCharacter(game.Players.LocalPlayer.Character, hat)
