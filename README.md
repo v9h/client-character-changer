@@ -7,7 +7,7 @@ A utility script that allows you to copy a user's avatar directly using their Us
 - Lightweight and easy to modify.
 
 ## TODO
-- ⏳ Make it actually work with another API ( economy api is mostly blacklisted ).
+- ✅ Make it actually work with another API ( economy api is mostly blacklisted ).
 - ✅ Add support for copying newer accessories (WaistAccessory, HairAccessory, etc.).
 - ⏳ Implement copying of body parts.
 - ⏳ Add clothing duplication.
