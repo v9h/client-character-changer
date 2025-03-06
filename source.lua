@@ -15,7 +15,7 @@ end
 local function getCurrentlyWearing(userId)
     local url = "https://avatar.roblox.com/v1/users/" .. userId .. "/currently-wearing"
     local data = requestData(url)
-    task.wait(.3)
+    task.wait(2)
 
     if data then
         local decodedData = HttpService:JSONDecode(data)
@@ -26,7 +26,7 @@ local function getCurrentlyWearing(userId)
 end
 
 local function getAssetType(assetId)
-    local url = "your.proxy/?assetId=" .. assetId
+    local url = "https://economyproxyapi.tr6ffic-5a7.workers.dev/?assetId=" .. assetId
     local data = requestData(url)
     task.wait(2)
 
@@ -51,12 +51,12 @@ local function getTextureIdFromXML(assetId)
 end
 
 function applyTextureToCharacter(character, assetType, textureId)
-    if assetType == 11 then
+    if assetType == 11 then 
         local shirt = character:FindFirstChildOfClass("Shirt")
         if shirt then
             shirt.ShirtTemplate = textureId
         end
-    elseif assetType == 12 then 
+    elseif assetType == 12 then
         local pants = character:FindFirstChildOfClass("Pants")
         if pants then
             pants.PantsTemplate = textureId
@@ -65,6 +65,14 @@ function applyTextureToCharacter(character, assetType, textureId)
         local tshirt = character:FindFirstChildOfClass("ShirtGraphic")
         if tshirt then
             tshirt.Graphic = textureId
+        end
+    end
+end
+
+function removeAllHats(character)
+    for _, item in ipairs(character:GetChildren()) do
+        if item:IsA("Accoutrement") or item:IsA("Accessory") then
+            item:Destroy()
         end
     end
 end
@@ -98,7 +106,11 @@ function attachHatToCharacter(character, hat)
     end
 end
 
-local userId = 1 -- user id here
+local userId = 1 
+local character = game.Players.LocalPlayer.Character
+
+removeAllHats(character) 
+
 local assetIds = getCurrentlyWearing(userId)
 
 if assetIds then
@@ -110,12 +122,12 @@ if assetIds then
             if assetType == 11 or assetType == 12 or assetType == 2 then
                 local textureId = getTextureIdFromXML(assetId)
                 if textureId then
-                    applyTextureToCharacter(game.Players.LocalPlayer.Character, assetType, textureId)
+                    applyTextureToCharacter(character, assetType, textureId)
                 end
             end
             if assetType == 8 or (assetType >= 41 and assetType <= 47) then
                 local hat = game:GetObjects("rbxassetid://" .. tostring(assetId))[1]
-                attachHatToCharacter(game.Players.LocalPlayer.Character, hat)
+                attachHatToCharacter(character, hat)
             end
         end
     end
