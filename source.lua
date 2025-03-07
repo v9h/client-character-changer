@@ -26,13 +26,13 @@ local function getCurrentlyWearing(userId)
 end
 
 local function getAssetType(assetId)
-    local url = "https://economyproxyapi.tr6ffic-5a7.workers.dev/?assetId=" .. assetId
+    local url = "https://economy.roproxy.com/v2/assets/" .. assetId .. "/details"
     local data = requestData(url)
     task.wait(2)
 
     if data then
         local jsonData = HttpService:JSONDecode(data)
-        return jsonData and jsonData.type or nil
+        return jsonData and jsonData.AssetTypeId or nil
     end
 
     return nil
@@ -51,20 +51,28 @@ local function getTextureIdFromXML(assetId)
 end
 
 function applyTextureToCharacter(character, assetType, textureId)
-    if assetType == 11 then 
+    if assetType == 11 then -- Shirt
         local shirt = character:FindFirstChildOfClass("Shirt")
         if shirt then
             shirt.ShirtTemplate = textureId
         end
-    elseif assetType == 12 then
+    elseif assetType == 12 then -- Pants
         local pants = character:FindFirstChildOfClass("Pants")
         if pants then
             pants.PantsTemplate = textureId
         end
-    elseif assetType == 2 then 
+    elseif assetType == 2 then -- T-Shirt
         local tshirt = character:FindFirstChildOfClass("ShirtGraphic")
         if tshirt then
             tshirt.Graphic = textureId
+        end
+    elseif assetType == 18 then -- Face
+        local head = character:FindFirstChild("Head")
+        if head then
+            local face = head:FindFirstChild("face")
+            if face then
+                face.Texture = "rbxassetid://" .. textureId
+            end
         end
     end
 end
@@ -115,11 +123,11 @@ local assetIds = getCurrentlyWearing(userId)
 
 if assetIds then
     for _, assetId in ipairs(assetIds) do
-        task.wait(2)
+        task.wait(.25)
 
         local assetType = getAssetType(assetId)
         if assetType then
-            if assetType == 11 or assetType == 12 or assetType == 2 then
+            if assetType == 11 or assetType == 12 or assetType == 2 or assetType == 18 then
                 local textureId = getTextureIdFromXML(assetId)
                 if textureId then
                     applyTextureToCharacter(character, assetType, textureId)
